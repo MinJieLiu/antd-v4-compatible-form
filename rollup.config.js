@@ -6,6 +6,7 @@ import postcss from 'rollup-plugin-postcss';
 import url from 'rollup-plugin-url';
 import json from 'rollup-plugin-json';
 import NpmImport from 'less-plugin-npm-import';
+import copy from 'rollup-plugin-copy';
 import svgr from '@svgr/rollup';
 
 import pkg from './package.json';
@@ -49,5 +50,10 @@ export default {
     }),
     json(),
     commonjs(),
+    copy({
+      targets: [
+        { src: 'src/style/*', dest: 'dist/style' },
+      ],
+    }),
   ],
 };

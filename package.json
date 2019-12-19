@@ -1,6 +1,6 @@
 {
   "name": "antd-v4-compatible-form",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "antd@4.x form，用于 antd@3.x",
   "author": "MinJieLiu",
   "license": "MIT",
@@ -51,6 +51,7 @@
     "rollup": "^1.27.6",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-postcss": "^2.0.3",
