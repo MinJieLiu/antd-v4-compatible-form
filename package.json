@@ -1,6 +1,6 @@
 {
   "name": "antd-v4-compatible-form",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "antd@4.x form，用于 antd@3.x",
   "author": "MinJieLiu",
   "license": "MIT",
