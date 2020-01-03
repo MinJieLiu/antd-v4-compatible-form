@@ -21,6 +21,10 @@
     display: inline-block;
     padding-right: 8px;
   }
+
+  &-rtl {
+    direction: rtl;
+  }
 }
 
 // ================================================================
@@ -29,7 +33,6 @@
 .@{form-item-prefix-cls} {
   .reset-component;
 
-  display: flex;
   margin-bottom: @form-item-margin-bottom;
   vertical-align: top;
 
@@ -141,11 +144,21 @@
     .@{ant-prefix}-input-search:not(.@{ant-prefix}-input-search-enter-button) {
       .@{ant-prefix}-input-suffix {
         right: 28px;
+
+        .@{form-prefix-cls}-rtl & {
+          right: auto;
+          left: 28px;
+        }
       }
     }
 
     .@{ant-prefix}-input-password-icon {
       margin-right: 18px;
+
+      .@{form-prefix-cls}-rtl & {
+        margin-right: 0;
+        margin-left: 18px;
+      }
     }
 
     // ======================== Switch =========================
@@ -160,24 +173,44 @@
     > .@{ant-prefix}-select .@{ant-prefix}-select-selection__clear,
     :not(.@{ant-prefix}-input-group-addon) > .@{ant-prefix}-select .@{ant-prefix}-select-arrow,
     :not(.@{ant-prefix}-input-group-addon)
-      > .@{ant-prefix}-select
-      .@{ant-prefix}-select-selection__clear {
+    > .@{ant-prefix}-select
+    .@{ant-prefix}-select-selection__clear {
       right: 28px;
+
+      .@{form-prefix-cls}-rtl & {
+        right: auto;
+        left: 28px;
+      }
     }
     > .@{ant-prefix}-select .@{ant-prefix}-select-selection-selected-value,
     :not(.@{ant-prefix}-input-group-addon)
-      > .@{ant-prefix}-select
-      .@{ant-prefix}-select-selection-selected-value {
+    > .@{ant-prefix}-select
+    .@{ant-prefix}-select-selection-selected-value {
       padding-right: 42px;
+
+      .@{form-prefix-cls}-rtl & {
+        padding-right: 0;
+        padding-left: 42px;
+      }
     }
 
     // ======================= Cascader ========================
     .@{ant-prefix}-cascader-picker {
       &-arrow {
         margin-right: 17px;
+
+        .@{form-prefix-cls}-rtl & {
+          margin-right: 0;
+          margin-left: 17px;
+        }
       }
       &-clear {
         right: 28px;
+
+        .@{form-prefix-cls}-rtl & {
+          right: auto;
+          left: 28px;
+        }
       }
     }
 
@@ -217,6 +250,11 @@
           animation: zoomIn 0.3s @ease-out-back;
           pointer-events: none;
 
+          .@{form-prefix-cls}-rtl & {
+            right: auto;
+            left: 0;
+          }
+
           & svg {
             position: absolute;
             top: 0;
@@ -249,14 +287,11 @@
 
     //select
     .@{ant-prefix}-select {
-      &-selection {
-        border-color: @warning-color;
-        &:hover {
-          border-color: @warning-color;
-        }
+      .@{ant-prefix}-select-selector {
+        border-color: @warning-color !important;
       }
-      &-open .@{ant-prefix}-select-selection,
-      &-focused .@{ant-prefix}-select-selection {
+      &.@{ant-prefix}-select-open .@{ant-prefix}-select-selector,
+      &.@{ant-prefix}-select-focused .@{ant-prefix}-select-selector {
         .active(@warning-color);
       }
     }
@@ -290,28 +325,26 @@
 
     //select
     .@{ant-prefix}-select {
-      &-selection {
-        border-color: @error-color;
-        &:hover {
-          border-color: @error-color;
-        }
+      .@{ant-prefix}-select-selector {
+        border-color: @error-color !important;
       }
-      &-open .@{ant-prefix}-select-selection,
-      &-focused .@{ant-prefix}-select-selection {
+      &.@{ant-prefix}-select-open .@{ant-prefix}-select-selector,
+      &.@{ant-prefix}-select-focused .@{ant-prefix}-select-selector {
         .active(@error-color);
+      }
+    }
+
+    // fixes https://github.com/ant-design/ant-design/issues/20482
+    .@{ant-prefix}-input-group-addon .@{ant-prefix}-select {
+      &.@{ant-prefix}-select-single:not(.@{ant-prefix}-select-customize-input)
+      .@{ant-prefix}-select-selector {
+        border: 0;
       }
     }
 
     .@{ant-prefix}-select.@{ant-prefix}-select-auto-complete {
       .@{ant-prefix}-input:focus {
         border-color: @error-color;
-      }
-    }
-
-    .@{ant-prefix}-input-group-addon .@{ant-prefix}-select {
-      &-selection {
-        border-color: transparent;
-        box-shadow: none;
       }
     }
 

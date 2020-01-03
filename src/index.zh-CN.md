@@ -29,6 +29,7 @@ title: Form
 | labelCol | label 标签布局，同 `<Col>` 组件，设置 `span` `offset` 值，如 `{span: 3, offset: 12}` 或 `sm: {span: 3, offset: 12}` | [object](https://ant.design/components/grid/#Col) | - |
 | layout | 表单布局 | 'horizontal'\|'vertical'\|'inline' | 'horizontal' |
 | name | 表单名称，会作为表单字段 `id` 前缀使用 | string | - |
+| size | 设置字段组件的尺寸（仅限 antd 组件） | `small | middle | large` | - |
 | validateMessages | 验证提示模板，说明[见下](#validateMessages) | [ValidateMessages](https://github.com/react-component/field-form/blob/master/src/utils/messages.ts) | - |
 | wrapperCol | 需要为输入控件设置布局样式时，使用该属性，用法同 labelCol | [object](https://ant.design/components/grid/#Col) | - |
 | onFinish | 提交表单且数据验证成功后回调事件 | Function(values) | - |
@@ -133,7 +134,7 @@ Form 通过增量更新方式，只更新被修改的字段相关组件以达到
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | name | 字段名，支持数组 | [NamePath](#NamePath) | - |
-| children | 渲染函数 | (fields: Field[], operation: { add, remove }) => React.ReactNode | - |
+| children | 渲染函数 | (fields: Field[], operation: { add, remove, move }) => React.ReactNode | - |
 
 ```tsx
 <Form.List>
@@ -328,3 +329,12 @@ const TestForm = () => {
 在线示例：
 
 [![Edit wrappedComponentRef-in-function-component](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/wrappedcomponentref-in-function-component-fj43c?fontsize=14&hidenavigation=1&theme=dark)
+
+<style>
+  .site-form-item-icon {
+    color: rgba(0, 0, 0, 0.25);
+  }
+  [data-theme="dark"] .site-form-item-icon {
+    color: rgba(255,255,255,.3);
+  }
+</style>

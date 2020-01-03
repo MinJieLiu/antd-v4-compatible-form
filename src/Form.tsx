@@ -74,12 +74,7 @@ const InternalForm: React.FC<FormProps> = (props, ref) => {
         colon,
       }}
     >
-      <FieldForm
-        id={name}
-        {...formProps}
-        form={wrapForm}
-        className={formClassName}
-      />
+      <FieldForm id={name} {...formProps} form={wrapForm} className={formClassName} />
     </FormContext.Provider>
   );
 };

@@ -2,7 +2,7 @@ import * as React from 'react';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 import { Field, FormInstance } from 'rc-field-form';
-import { FieldProps as RcFieldProps } from 'rc-field-form/lib/Field';
+import { FieldProps } from 'rc-field-form/lib/Field';
 import omit from 'omit.js';
 import { Row } from 'antd';
 import { tuple } from './type';
@@ -17,16 +17,17 @@ const ValidateStatuses = tuple('success', 'warning', 'error', 'validating', '');
 export type ValidateStatus = typeof ValidateStatuses[number];
 
 type RenderChildren = (form: FormInstance) => React.ReactElement;
+type RcFieldProps = Omit<FieldProps, 'children'>;
 
 export interface FormItemProps
   extends FormItemLabelProps,
     FormItemInputProps,
-    RcFieldProps {
+    Omit<RcFieldProps, 'children'> {
   prefixCls?: string;
   noStyle?: boolean;
   style?: React.CSSProperties;
   className?: string;
-  children: React.ReactElement | RenderChildren;
+  children: React.ReactElement | RenderChildren | React.ReactElement[];
   id?: string;
   hasFeedback?: boolean;
   validateStatus?: ValidateStatus;
@@ -59,9 +60,7 @@ const FormItem: React.FC<FormItemProps> = (props: FormItemProps) => {
   const formContext = React.useContext(FormContext);
   const { updateItemErrors } = React.useContext(FormItemContext);
   const [domErrorVisible, setDomErrorVisible] = React.useState(false);
-  const [inlineErrors, setInlineErrors] = React.useState<
-    Record<string, string[]>
-  >({});
+  const [inlineErrors, setInlineErrors] = React.useState<Record<string, string[]>>({});
 
   const { name: formName } = formContext;
 
@@ -95,13 +94,13 @@ const FormItem: React.FC<FormItemProps> = (props: FormItemProps) => {
         const updateChildItemErrors = noStyle
           ? updateItemErrors
           : (subName: string, subErrors: string[]) => {
-              if (!isEqual(inlineErrors[subName], subErrors)) {
-                setInlineErrors({
-                  ...inlineErrors,
-                  [subName]: subErrors,
-                });
-              }
-            };
+            if (!isEqual(inlineErrors[subName], subErrors)) {
+              setInlineErrors({
+                ...inlineErrors,
+                [subName]: subErrors,
+              });
+            }
+          };
 
         if (noStyle) {
           nameRef.current = [...mergedName];
@@ -139,38 +138,36 @@ const FormItem: React.FC<FormItemProps> = (props: FormItemProps) => {
         // ====================== Class Name ======================
         const itemClassName = {
           [`${prefixCls}-item`]: true,
-          [`${prefixCls}-item-with-help`]: domErrorVisible, // TODO: handle this
+          [`${prefixCls}-item-with-help`]: domErrorVisible || help,
           [`${className}`]: !!className,
 
           // Status
           [`${prefixCls}-item-has-feedback`]:
-            (mergedValidateStatus && hasFeedback) ||
-            mergedValidateStatus === 'validating',
+          (mergedValidateStatus && hasFeedback) || mergedValidateStatus === 'validating',
           [`${prefixCls}-item-has-success`]: mergedValidateStatus === 'success',
           [`${prefixCls}-item-has-warning`]: mergedValidateStatus === 'warning',
           [`${prefixCls}-item-has-error`]: mergedValidateStatus === 'error',
           [`${prefixCls}-item-has-error-leave`]:
-            !help && domErrorVisible && mergedValidateStatus !== 'error',
-          [`${prefixCls}-item-is-validating`]:
-            mergedValidateStatus === 'validating',
+          !help && domErrorVisible && mergedValidateStatus !== 'error',
+          [`${prefixCls}-item-is-validating`]: mergedValidateStatus === 'validating',
         };
 
         const isRequired =
           required !== undefined
             ? required
             : !!(
-                rules &&
-                rules.some(rule => {
-                  if (rule && typeof rule === 'object' && rule.required) {
-                    return true;
-                  }
-                  if (typeof rule === 'function') {
-                    const ruleEntity = rule(context);
-                    return ruleEntity && ruleEntity.required;
-                  }
-                  return false;
-                })
-              );
+              rules &&
+              rules.some(rule => {
+                if (rule && typeof rule === 'object' && rule.required) {
+                  return true;
+                }
+                if (typeof rule === 'function') {
+                  const ruleEntity = rule(context);
+                  return ruleEntity && ruleEntity.required;
+                }
+                return false;
+              })
+            );
 
         // ======================= Children =======================
         const fieldId = getFieldId(mergedName, formName);
@@ -180,12 +177,11 @@ const FormItem: React.FC<FormItemProps> = (props: FormItemProps) => {
         };
 
         let childNode;
-        if (typeof children === 'function' && (!shouldUpdate || !!name)) {
-          warning(
-            false,
-            'Form.Item',
-            '`children` of render props only work with `shouldUpdate`.',
-          );
+        if (Array.isArray(children) && !!name) {
+          warning(false, 'Form.Item', '`children` is array of render props cannot have `name`.');
+          childNode = children;
+        } else if (typeof children === 'function' && (!shouldUpdate || !!name)) {
+          warning(false, 'Form.Item', '`children` of render props only work with `shouldUpdate`.');
         } else if (!mergedName.length && !shouldUpdate && !dependencies) {
           childNode = children;
         } else if (React.isValidElement(children)) {
@@ -193,11 +189,9 @@ const FormItem: React.FC<FormItemProps> = (props: FormItemProps) => {
 
           // We should keep user origin event handler
           const triggers = new Set<string>();
-          [...toArray(trigger), ...toArray(validateTrigger)].forEach(
-            eventName => {
-              triggers.add(eventName);
-            },
-          );
+          [...toArray(trigger), ...toArray(validateTrigger)].forEach(eventName => {
+            triggers.add(eventName);
+          });
 
           triggers.forEach(eventName => {
             if (eventName in mergedControl && eventName in children.props) {
@@ -263,9 +257,7 @@ const FormItem: React.FC<FormItemProps> = (props: FormItemProps) => {
               onDomErrorVisibleChange={setDomErrorVisible}
               validateStatus={mergedValidateStatus}
             >
-              <FormItemContext.Provider
-                value={{ updateItemErrors: updateChildItemErrors }}
-              >
+              <FormItemContext.Provider value={{ updateItemErrors: updateChildItemErrors }}>
                 {childNode}
               </FormItemContext.Provider>
             </FormItemInput>

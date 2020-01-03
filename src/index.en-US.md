@@ -28,6 +28,7 @@ High performance Form component with data scope management. Including data colle
 | labelCol | label layout, like `<Col>` component. Set `span` `offset` value like `{span: 3, offset: 12}` or `sm: {span: 3, offset: 12}` | [object](https://ant.design/components/grid/#Col) | - |
 | layout | Form layout | 'horizontal'\|'vertical'\|'inline' | 'horizontal' |
 | name | Form name. Will be the prefix of Field `id` | string | - |
+| size | Set field component size (antd components only) | `small | middle | large` | - |
 | validateMessages | 验证提示模板，说明[见下](#validateMessages) | [ValidateMessages](https://github.com/react-component/field-form/blob/master/src/utils/messages.ts) | - |
 | wrapperCol | The layout for input controls, same as `labelCol` | [object](https://ant.design/components/grid/#Col) | - |
 | onFinish | Trigger after submitting the form and verifying data successfully | Function(values) | - |
@@ -132,7 +133,7 @@ Provides array management for fields.
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | name | Field name, support array | [NamePath](#NamePath) | - |
-| children | Render function | (fields: Field[], operation: { add, remove }) => React.ReactNode | - |
+| children | Render function | (fields: Field[], operation: { add, remove, move }) => React.ReactNode | - |
 
 ```tsx
 <Form.List>
@@ -327,3 +328,12 @@ const TestForm = () => {
 Online demo:
 
 [![Edit wrappedComponentRef-in-function-component](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/wrappedcomponentref-in-function-component-fj43c?fontsize=14&hidenavigation=1&theme=dark)
+
+<style>
+  .site-form-item-icon {
+    color: rgba(0, 0, 0, 0.25);
+  }
+  [data-theme="dark"] .site-form-item-icon {
+    color: rgba(255,255,255,.3);
+  }
+</style>
